@@ -1,0 +1,8 @@
+/kai_trading/kai_idea$ kubectl port-forward svc/airflow-webserver --namespace airflow 8080:8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+Handling connection for 8080
+E1017 17:10:16.285273   91506 portforward.go:413] "Unhandled Error" err=<
+        an error occurred forwarding 8080 -> 8080: error forwarding port 8080 to pod 47fae0554a53bfcea24912a86442b4890e2eae15216e044615f04f4efeb16756, uid : exit status 1: 2024/10/17 09:10:16 socat[202874] E connect(5, AF=2 127.0.0.1:8080, 16): Connection refused
+ >
+error: lost connection to pod
