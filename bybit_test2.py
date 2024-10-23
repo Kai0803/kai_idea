@@ -165,6 +165,20 @@ def input_db_trading_data():
     PositionValue= positions['result']['list'][0]['positionValue'] 
     createdTime= datetime.fromtimestamp(int(positions['result']['list'][0]['updatedTime']) / 1000, timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M:%S')
     Time= datetime.fromtimestamp(int(positions['time']) / 1000, timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M:%S')
+    # 更新 Django 模型
+    position = positions['result']['list'][0]
+    StrategyInfo.objects.create(
+        strategy_name=position['symbol'],
+        current_position=float(position['size']),
+        profit_loss=float(position['curRealisedPnl']),
+        leverage=float(position['leverage']),
+        mark_price=float(position['markPrice']),
+        avg_price=float(position['avgPrice']),
+        side=position['side'],
+        position_value=float(position['positionValue']),
+        created_time=datetime.fromtimestamp(int(position['updatedTime']) / 1000, timezone.utc),
+        transaction_time=datetime.fromtimestamp(int(positions['time']) / 1000, timezone.utc)
+    )
     if conn:
         insert_query = sql.SQL("""
         INSERT INTO sptd.tdata 
@@ -180,7 +194,22 @@ def input_db_trading_data():
         execute_query(conn, insert_query, params)
 
         conn.close()
-        
+def get_real_time_position():
+    try:
+        positions = session.get_positions(category="linear", symbol="ETHUSDT")
+        position = positions['result']['list'][0]
+        return {
+            'symbol': position['symbol'],
+            'size': float(position['size']),
+            'side': position['side'],
+            'entry_price': float(position['avgPrice']),
+            'leverage': float(position['leverage']),
+            'unrealised_pnl': float(position['unrealisedPnl']),
+            'mark_price': float(position['markPrice'])
+        }
+    except Exception as e:
+        print(f"獲取倉位信息失敗: {e}")
+        return None 
 if __name__ == "__main__":
     # 在您的策略代碼中適當的位置調用此函數
     update_strategy_info("My Strategy", 100.0, 50.0)

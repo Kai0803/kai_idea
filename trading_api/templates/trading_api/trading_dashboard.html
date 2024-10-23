@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+       <h2>實時倉位信息</h2>
+       <div id="realTimePosition">
+           <!-- 實時倉位信息將在這裡顯示 -->
+       </div>
+</head>
+<body>
+    <h1>Trading Dashboard</h1>
+    <table id="tradingTable">
+        <thead>
+            <tr>
+                <th>Strategy Name</th>
+                <th>Current Position</th>
+                <th>Profit/Loss</th>
+                <th>Leverage</th>
+                <th>Mark Price</th>
+                <th>Avg Price</th>
+                <th>Side</th>
+                <th>Position Value</th>
+                <th>Created Time</th>
+                <th>Transaction Time</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchTradingData() {
+            fetch('http://localhost:8000/api/strategy-info/', {
+                headers: {
+                    'Authorization': 'Token 5e5cf2ae2f7d2f86b3000bb63d65b87202fcc8c1'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#tradingTable tbody');
+                tableBody.innerHTML = ''; // Clear existing data
+
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.strategy_name}</td>
+                            <td>${item.current_position}</td>
+                            <td>${item.profit_loss}</td>
+                            <td>${item.leverage}</td>
+                            <td>${item.mark_price}</td>
+                            <td>${item.avg_price}</td>
+                            <td>${item.side}</td>
+                            <td>${item.position_value}</td>
+                            <td>${new Date(item.created_time).toLocaleString()}</td>
+                            <td>${new Date(item.transaction_time).toLocaleString()}</td>
+                            <td>${new Date(item.timestamp).toLocaleString()}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch data when the page loads
+        fetchTradingData();
+
+        // Optionally, refresh data every 60 seconds
+        setInterval(fetchTradingData, 60000);
+        function fetchRealTimePosition() {
+            fetch('http://localhost:8000/api/real-time-position/', {
+                headers: {
+                    'Authorization': 'Token 5e5cf2ae2f7d2f86b3000bb63d65b87202fcc8c1'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const positionDiv = document.getElementById('realTimePosition');
+                positionDiv.innerHTML = `
+                    <p>Symbol: ${data.symbol}</p>
+                    <p>Size: ${data.size}</p>
+                    <p>Side: ${data.side}</p>
+                    <p>Entry Price: ${data.entry_price}</p>
+                    <p>Leverage: ${data.leverage}</p>
+                    <p>Unrealised PNL: ${data.unrealised_pnl}</p>
+                    <p>Mark Price: ${data.mark_price}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // 每5秒更新一次實時倉位信息
+        setInterval(fetchRealTimePosition, 5000);
+
+        // 頁面加載時立即獲取一次
+        fetchRealTimePosition();
+    </script>
+</body>
+</html>
