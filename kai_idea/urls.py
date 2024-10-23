@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from trading_api.views import StrategyInfoViewSet
-
+from django.urls import path
+from trading_api.views import trading_dashboard
+from trading_api.views import real_time_position
 router = DefaultRouter()
 router.register(r'strategy-info', StrategyInfoViewSet)
 
@@ -26,4 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # ... 其他已存在的 url patterns ...
     path('api/', include(router.urls)),
+    path('api/real-time-position/', real_time_position, name='real_time_position'),
+    path('dashboard/', trading_dashboard, name='trading_dashboard'),
 ]
