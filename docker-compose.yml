@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"  # 如果你的应用使用 5000 端口
+
