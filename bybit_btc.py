@@ -4,6 +4,8 @@ import psycopg2
 from psycopg2 import sql
 from pybit.unified_trading import HTTP
 from datetime import datetime, timezone
+import sys
+#sys.path.append('/home/kai')
 from Sdata import bybitkey,bybit_Secret
 import sys
 import os
@@ -214,4 +216,4 @@ def get_real_time_position():
 if __name__ == "__main__":
     # 在您的策略代碼中適當的位置調用此函數
     update_strategy_info("My Strategy", 100.0, 50.0)
-    trading_strategy(trad_types[0])
+    trading_strategy(trad_types[1])

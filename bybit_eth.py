@@ -4,8 +4,9 @@ import psycopg2
 from psycopg2 import sql
 from pybit.unified_trading import HTTP
 from datetime import datetime, timezone
-from Sdata import bybitkey,bybit_Secret
 import sys
+#sys.path.append('/home/kai')
+from Sdata import bybitkey,bybit_Secret
 import os
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kai_idea.settings")
@@ -106,7 +107,19 @@ def place_order(side, qty):
     except Exception as e:
         print(f"order fail: {e}")
         return None
-
+def place_order_v2(side, qty):
+    try:
+        order = session.place_order(
+           category="linear",
+           symbol=symbol,
+            side=side,
+             orderType="Market",
+              qty=qty
+           )
+         return order
+     except Exception as e:
+         print(f"order fail: {e}")
+         return None
 def get_position():
     try:
         position = session.get_positions(category="linear", symbol=symbol)
@@ -143,8 +156,8 @@ def trading_strategy(trad_type):
             if roi >= 20:
                 ans = close_all_position(trad_type)
                 print('平倉',ans)
-                time.sleep(13)
-            elif roi <= -86:
+                time.sleep(66)
+            elif roi <= -80:
                 print(f'Order puls {trad_type}')
                 place_order(trad_type, min_qty)
                 input_db_trading_data()

@@ -4,8 +4,9 @@ import psycopg2
 from psycopg2 import sql
 from pybit.unified_trading import HTTP
 from datetime import datetime, timezone
-from Sdata import bybitkey,bybit_Secret
 import sys
+#sys.path.append('/home/kai')
+from Sdata import bybitkey,bybit_Secret
 import os
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kai_idea.settings")
