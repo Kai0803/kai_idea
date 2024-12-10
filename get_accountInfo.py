@@ -109,6 +109,7 @@ def get_history_info():
                 #pnl = float(order['cumExecValue']) - (float(order['cumExecFee'])*2) 
                 #pnl =  (float(order['cumExecValue']) * 0.2 * float(order['cumExecQty'])) - (float(order['cumExecFee']) *2 )
                 pnl =  (float(order['cumExecValue']) * 0.2 /100 ) - (float(order['cumExecFee']) *2 )
+                #pnl = ((float(order['price']) - float(order['avgPrice']))*float(order['qty'])) - (float(order['cumExecFee'])*2)
                 total_pnl += (pnl)
                 temp = int(int(order['updatedTime']) / 1000)
                 print(f"訂單ID: {order['orderId']}, 實現盈虧: {pnl}, 更新時間: {datetime.fromtimestamp(temp)}")
@@ -116,6 +117,7 @@ def get_history_info():
                 #code.interact(local=locals())
                 #break
         print(f"今天總盈虧: {total_pnl}")
+        #print(order)
         print(f"今天總結單數: {earn_num}")
         # (float(order['price']) - float(order['avgPrice']))
     except Exception as e:

@@ -107,25 +107,12 @@ def place_order(side, qty):
     except Exception as e:
         print(f"order fail: {e}")
         return None
-def place_order_v2(side, qty):
-    try:
-        order = session.place_order(
-           category="linear",
-           symbol=symbol,
-            side=side,
-             orderType="Market",
-              qty=qty
-           )
-         return order
-     except Exception as e:
-         print(f"order fail: {e}")
-         return None
 def get_position():
     try:
         position = session.get_positions(category="linear", symbol=symbol)
         return position['result']['list'][0]
     except Exception as e:
-        print(f"获取持仓信息失败: {e}")
+        print(f"Get info fail: {e}")
         return None
 
 def calculate_roi(position,trad_type):
@@ -156,11 +143,11 @@ def trading_strategy(trad_type):
             if roi >= 20:
                 ans = close_all_position(trad_type)
                 print('平倉',ans)
-                time.sleep(66)
             elif roi <= -80:
                 print(f'Order puls {trad_type}')
                 place_order(trad_type, min_qty)
                 input_db_trading_data()
+                time.sleep(60)
 
                 
 
